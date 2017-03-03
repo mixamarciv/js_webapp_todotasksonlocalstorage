@@ -2,16 +2,64 @@
 <html>
   <head>
     <title>web application without server</title>
-	
-	<link rel='stylesheet' href='frameworks/bootstrap.slate.min.css' />
-	<script type='text/javascript' src='frameworks/bootstrap.min.js'></script>
-	<script type='text/javascript' src='frameworks/jquery.min.js'></script>
 
+		<script type='text/javascript' src='frameworks/jquery.min.js'></script>
+		<link rel='stylesheet' href='frameworks/bootstrap.slate.min.css' />
+		<script type='text/javascript' src='frameworks/bootstrap.min.js'></script>
+
+		<script type='text/javascript' src='tasks.js'></script>
   </head>
 <body>
 	<div class="container">
-		<h1>ToDo</h1>
+		<h1 id=todo>ToDo</h1>
+		<div id=tasks class="list-group">
+		</div>
 	</div>
+
+
+<script language='javascript'>
+var tasks;
+$(document).ready(function(){
+	tasks = loadTasks();
+
+	//tasks.addTask({title:"test "+(new Date().toTimeString())})
+
+	$('#tasks').html("");
+	tasks.showTasks({viewTaskFn:viewTask})
+})
+
+function viewTask(task){
+	$('#tasks').append(viewTaskHtml(task));
+}
+function viewTaskHtml(task){
+	var compl_t = task.getCompleteTime();
+	var complete_html = `<a href="#" class="btn btn-success" onClick=completeTask('`+task.getKey()+`')>complete</a>`;
+	if(compl_t){
+		complete_html = ` <nobr title="complete task">`+task.getCompleteTimeStr()+`</nobr></small>`;
+	}
+	html = `
+	<div id="`+task.getKey()+`">
+	<div class="list-group-item list-group-item-action">
+		<h4 class="list-group-item-heading container">
+			<div class="col-md-7"><b>`+task.getTitle()+`</b></div>
+			<div class="col-md-5"><small>
+				<nobr title="дата создания">`+task.getStartTimeStr()+` </nobr>
+				/ `+ complete_html +`
+			</div>
+		</h4>
+	</div>
+	</div>
+	`;
+	return html
+}
+
+function completeTask(taskKey){
+	alert("complete "+taskKey);
+	tasks.completeTask(taskKey);
+	$('#'+taskKey).html(viewTaskHtml(tasks.getTask(taskKey)))
+}
+
+</script>
 
 </body>
 </html>
