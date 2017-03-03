@@ -10,54 +10,109 @@
 		<script type='text/javascript' src='tasks.js'></script>
   </head>
 <body>
+
+<style>
+.imgcompl {
+	height: 40px;
+}
+.delete-task-btn {
+	min-width: 40px;
+}
+</style>
+
 	<div class="container">
+
 		<h1 id=todo>ToDo</h1>
+
+		<div id=newtask class="list-group">
+					<div class="list-group-item list-group-item-action">
+						<div class="container">
+							<h4 class="list-group-item-heading col-md-8">
+									<input type="text" class="form-control input-lg new-task-input" value="" id="new_task_title">
+							</h4>
+							<div class="col-md-3">
+									<input type="button" class="btn btn-primary form-control input-lg new-task-submit" value="create task" onclick="createTask()">
+							</div>
+						</div>
+					</div>
+		</div>
+
 		<div id=tasks class="list-group">
 		</div>
+
 	</div>
 
 
 <script language='javascript'>
 var tasks;
+
 $(document).ready(function(){
 	tasks = loadTasks();
-
-	//tasks.addTask({title:"test "+(new Date().toTimeString())})
+	updateTasks();
 
 	$('#tasks').html("");
 	tasks.showTasks({viewTaskFn:viewTask})
 })
+
+function updateTasks(){
+	$('#todo').html("ToDo <small>tasks: "+tasks.count()+" complete: "+tasks.countComplete()+"</small>");
+}
+
+function createTask(taskKey){
+	var title = $('#new_task_title').val();
+	var task = tasks.addTask({title:title})
+	updateTasks();
+	$('#tasks').prepend(viewTaskHtml(task))
+}
+
+function completeTask(taskKey){
+	tasks.completeTask(taskKey);
+	updateTasks();
+	$('#'+taskKey).html(viewTaskHtml(tasks.getTask(taskKey)))
+}
+
+function removeTask(taskKey){
+	tasks.removeTask(taskKey);
+	updateTasks();
+	$('#'+taskKey).html("")
+}
+
+
 
 function viewTask(task){
 	$('#tasks').append(viewTaskHtml(task));
 }
 function viewTaskHtml(task){
 	var compl_t = task.getCompleteTime();
-	var complete_html = `<a href="#" class="btn btn-success" onClick=completeTask('`+task.getKey()+`')>complete</a>`;
+	var complete_html_beg = `<a class="btn btn-info" onClick=completeTask('`+task.getKey()+`')>complete</a>`;
+	var complete_html_end = ` in progress.. `;
 	if(compl_t){
-		complete_html = ` <nobr title="complete task">`+task.getCompleteTimeStr()+`</nobr></small>`;
+		complete_html_beg = ` <img src="img/complete.png" class=imgcompl>`;
+		complete_html_end = ` <nobr title="complete task">`+task.getCompleteTimeStr()+`</nobr>`;
 	}
 	html = `
 	<div id="`+task.getKey()+`">
 	<div class="list-group-item list-group-item-action">
-		<h4 class="list-group-item-heading container">
-			<div class="col-md-7"><b>`+task.getTitle()+`</b></div>
-			<div class="col-md-5"><small>
-				<nobr title="дата создания">`+task.getStartTimeStr()+` </nobr>
-				/ `+ complete_html +`
+		<div class="container">
+			<div class="col-md-1">`+complete_html_beg+`</div>
+			<h4 class="list-group-item-heading col-md-5">
+				<b>`+task.getTitle()+`</b>
+			</h4>
+			<div class="col-md-4">
+					<small>
+					<nobr title="create date">`+task.getStartTimeStr()+` </nobr>
+					/ `+ complete_html_end +`
+					</small>
 			</div>
-		</h4>
+			<div class="col-md-1"><a class="btn btn-danger col-md-1 delete-task-btn" onClick=removeTask('`+task.getKey()+`')>del</a></div>
+		</div>
 	</div>
 	</div>
 	`;
 	return html
 }
 
-function completeTask(taskKey){
-	alert("complete "+taskKey);
-	tasks.completeTask(taskKey);
-	$('#'+taskKey).html(viewTaskHtml(tasks.getTask(taskKey)))
-}
+
 
 </script>
 
