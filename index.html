@@ -7,6 +7,7 @@
 		<link rel='stylesheet' href='frameworks/bootstrap.slate.min.css' />
 		<script type='text/javascript' src='frameworks/bootstrap.min.js'></script>
 
+		<script type='text/javascript' src='stdfnc.js'></script>
 		<script type='text/javascript' src='tasks.js'></script>
   </head>
 <body>
@@ -80,28 +81,28 @@ function removeTask(taskKey){
 
 function viewTaskHtml(task){
 	var compl_t = task.getCompleteTime();
-	var complete_html_beg = `<a class="btn btn-info" onClick=completeTask('`+task.getKey()+`')>complete</a>`;
+	var complete_html_beg = `<a class="btn btn-info" onClick=completeTask('`+task.getKey()+`') title="press to complete">complete</a>`;
 	var complete_html_end = ` in progress.. `;
 	if(compl_t){
-		complete_html_beg = ` <img src="img/complete.png" style="height:40px;">`;
-		complete_html_end = ` <nobr title="complete date">`+task.getCompleteTimeStr()+`</nobr>`;
+		complete_html_beg = ` <img src="img/complete.png" style="height:40px;" title="task completed">`;
+		complete_html_end = ` <nobr title="complete date" class="label label-success">`+task.getCompleteTimeStr()+`</nobr>`;
 	}
 	html = `
 	<div id="`+task.getKey()+`">
-	<div class="list-group-item list-group-item-action">
-		<div class="container">
-			<div class="col-md-1">`+complete_html_beg+`</div>
-			<h4 class="list-group-item-heading col-md-5">
-				<b>`+task.getTitle()+`</b>
+	<div class="list-group-item list-group-item-action container">
+			
+			<h4 class="list-group-item-heading col-md-10" title="task title">
+				<div class="col-md-2">`+complete_html_beg+`</div>
+				<div class="col-md-6"><b>`+task.getTitle()+`</b></div>
+				<div class="col-md-4"><small>
+						<nobr title="create date" class="label label-primary">`+task.getStartTimeStr()+`</nobr>
+						/ `+ complete_html_end +`
+						</small>
+				</div>
 			</h4>
-			<div class="col-md-4">
-					<small>
-					<nobr title="create date">`+task.getStartTimeStr()+` </nobr>
-					/ `+ complete_html_end +`
-					</small>
+			<div class="col-md-2">
+			  <input type="button" class="btn btn-default form-control input-lg" value="edit" onclick="editTask('`+task.getKey()+`')" title="press to start edit this task">
 			</div>
-			<div class="col-md-1"><a class="btn btn-default edit-task-btn" onClick=editTask('`+task.getKey()+`')>edit</a></div>
-		</div>
 	</div>
 	</div>
 	`;
@@ -111,25 +112,23 @@ function viewTaskHtml(task){
 function editTaskHtml(task,isnew){
 	var key = "newtask";
 	var title = "";
-	var submit_btn = `<input type="button" class="btn btn-primary form-control input-lg task-submit" value="create task" onclick="createTask()">`;
-	var remove_btn = ``;
+	var submit_btn = `<input type="button" class="btn btn-primary form-control input-lg" value="create task" onclick="createTask()" title="add new task">`;
+	var left_btn = `<h4 class="pull-right"><nobr><big>new task:</big></nobr></h4>`;
 	if(!isnew && task){
 		key = task.getKey();
 		title = task.getTitle();
-		submit_btn = `<input type="button" class="btn btn-primary form-control input-lg task-submit" value="update task" onclick="updateTask('`+key+`')">`;
-		remove_btn = `<input type="button" class="btn btn-danger form-control input-lg" value="delete" onClick="removeTask('`+key+`')" >`;
+		submit_btn = `<input type="button" class="btn btn-primary form-control input-lg" value="update task" onclick="updateTask('`+key+`')" title="update this task">`;
+		left_btn = `<input type="button" class="btn btn-danger form-control input-lg" value="delete" onClick="removeTask('`+key+`')" title="remove this task">`;
 	}
 
 	html = `
 	<div id="`+key+`">
-				<div class="list-group-item list-group-item-action">
-						<div class="container">
-							<div class="col-md-1">`+remove_btn+`</div>
-							<h4 class="list-group-item-heading col-md-8">
-									<input type="text" class="form-control input-lg task-input" value="`+title+`" id="task_title">
+				<div class="list-group-item list-group-item-action container">
+							<h4 class="list-group-item-heading col-md-10">
+								  <div class="col-md-2">`+left_btn+`</div>
+									<div class="col-md-10"><input type="text" class="form-control input-lg task-input" value="`+title+`" id="task_title" title="task title"></div>
 							</h4>
 							<div class="col-md-2">`+submit_btn+`</div>
-						</div>
 				</div>
 	</div>
 	`;

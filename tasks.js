@@ -61,10 +61,10 @@ function _create_task(taskkey, taskdata){
     task.getKey = function() {return this.key;}
     task.getTitle = function() {return this.title;}
     task.getStartTime = function() {return this.start_time;}
-    task.getStartTimeStr = function() {return new Date(this.start_time).toUTCString();}
+    task.getStartTimeStr = function() {return new Date(this.start_time).toStringYMDhms();}
     task.isComplete = function() {return !!this.complete_time;}
     task.getCompleteTime = function() {return this.complete_time;}
-    task.getCompleteTimeStr = function() {return new Date(this.complete_time).toUTCString();}
+    task.getCompleteTimeStr = function() {return new Date(this.complete_time).toStringYMDhms();}
 
     return task
 }
@@ -119,9 +119,9 @@ function _default_view_task_fn(task){
     return "["+task.getKey()+"] "+task.getTitle()+" [start time: "+task.getStartTime()+"] complete: "+task.getCompleteTime();
 }
 function _default_sort_tasks_fn(task1,task2){
-	if(task1.getTitle() >  task2.getTitle()) return 1;
+	if(task1.getTitle() >  task2.getTitle()) return -1;
 	if(task1.getTitle() == task2.getTitle()) return 0;
-	return -1;
+	return 1;
 }
 
 //sort and show task's
