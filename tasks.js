@@ -15,14 +15,14 @@ function loadTasks(){
         count: function(){return this.cnt;},
         countComplete: function(){return this.cntComplete;},
         getTask: function(key){return this.tasks[key];},
-        addTask: _add_task,       //arguments ({title}) result task
-        removeTask: _remove_task, //arguments (key) 
-        updateTask: _update_task, //arguments (key,{title,complete_time})
+        addTask: _add_task,       //arguments:({title}) result:task
+        removeTask: _remove_task, //arguments:(key) 
+        updateTask: _update_task, //arguments:(key,{title,complete_time})
         completeTask: _complete_task,
         showTasks: _show_tasks    //call opt.viewTaskFn for all tasks by filter/options arguments ({viewTaskFn,sortFn})
     }
     
-
+    //load task's from localStorage
     for(var key in localStorage){
         if( key.substr(0,4) == "task" ){
             var taskdata = 0;
@@ -124,6 +124,7 @@ function _default_sort_tasks_fn(task1,task2){
 	return -1;
 }
 
+//sort and show task's
 function _show_tasks(opt) {
     if(!opt) opt = _default_opt_show_tasks;
     if(typeof opt.viewTaskFn != "function") opt.viewTaskFn = _default_opt_show_tasks.viewTaskFn;

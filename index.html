@@ -11,15 +11,6 @@
   </head>
 <body>
 
-<style>
-.imgcompl {
-	height: 40px;
-}
-.delete-task-btn {
-	min-width: 40px;
-}
-</style>
-
 	<div class="container">
 
 		<h1 id=todo>ToDo</h1>
@@ -31,7 +22,6 @@
 		</div>
 
 	</div>
-
 
 <script language='javascript'>
 var tasks;
@@ -93,7 +83,7 @@ function viewTaskHtml(task){
 	var complete_html_beg = `<a class="btn btn-info" onClick=completeTask('`+task.getKey()+`')>complete</a>`;
 	var complete_html_end = ` in progress.. `;
 	if(compl_t){
-		complete_html_beg = ` <img src="img/complete.png" class=imgcompl>`;
+		complete_html_beg = ` <img src="img/complete.png" style="height:40px;">`;
 		complete_html_end = ` <nobr title="complete date">`+task.getCompleteTimeStr()+`</nobr>`;
 	}
 	html = `
